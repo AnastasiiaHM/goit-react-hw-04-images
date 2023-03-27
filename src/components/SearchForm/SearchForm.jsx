@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import {
   Form,
   SearchFormBtn,
@@ -7,42 +7,38 @@ import {
 } from './SearchForm.styled';
 import { FcSearch } from 'react-icons/fc';
 
-export class SearchForm extends Component {
-  state = {
-    inputValue: '',
+export function SearchForm({ onChange }) {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleChageInputValue = e => {
+    setInputValue(e.currentTarget.value.toLowerCase());
   };
 
-  handleChageInputValue = e => {
-    this.setState({ inputValue: e.currentTarget.value.toLowerCase() });
-  };
-
-  handleSubmitForm = e => {
+  const handleSubmitForm = e => {
     e.preventDefault();
 
-    this.props.onChange(this.state.inputValue);
+    onChange(inputValue);
 
-    this.setState({ inputValue: '' });
+    setInputValue('');
   };
 
-  render() {
-    return (
-      <Form onSubmit={this.handleSubmitForm}>
-        <SearchFormBtn type="submit">
-          <FcSearch />
-          <SearchFormlabel>Search</SearchFormlabel>
-        </SearchFormBtn>
+  return (
+    <Form onSubmit={handleSubmitForm}>
+      <SearchFormBtn type="submit">
+        <FcSearch />
+        <SearchFormlabel>Search</SearchFormlabel>
+      </SearchFormBtn>
 
-        <SearchFormInput
-          name="value"
-          required
-          value={this.state.inputValue}
-          type="text"
-          autoComplete="off"
-          autoFocus
-          placeholder="Search images and photos"
-          onChange={this.handleChageInputValue}
-        />
-      </Form>
-    );
-  }
+      <SearchFormInput
+        name="value"
+        required
+        value={inputValue}
+        type="text"
+        autoComplete="off"
+        autoFocus
+        placeholder="Search images and photos"
+        onChange={handleChageInputValue}
+      />
+    </Form>
+  );
 }

@@ -13,7 +13,7 @@ export default function App() {
   return (
     <div className={css.App}>
       <SearchBar>
-        <SearchForm onChange={setInputValue(inputValue)} />
+        <SearchForm onChange={setInputValue} />
       </SearchBar>
 
       <ImageGallery inputValue={inputValue} />

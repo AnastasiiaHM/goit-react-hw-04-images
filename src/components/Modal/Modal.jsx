@@ -1,44 +1,40 @@
 import { Backdroup, LargeImage, Modals, BtnClose } from './Modal.styled';
-import React, { Component } from 'react';
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { TfiClose } from 'react-icons/tfi';
 
 const modalRoot = document.querySelector('#modalRoot');
 
-export class Modal extends Component {
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
+export function Modal({ onClose, largeImage, alt }) {
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
     document.body.style.overflow = 'hidden';
-  }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'auto';
+    };
+  });
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown);
-    document.body.style.overflow = 'auto';
-  }
-
-  handleKeyDown = e => {
-    if (e.code === 'Escape') this.props.onClose();
+  const handleKeyDown = e => {
+    if (e.code === 'Escape') onClose();
   };
 
-  handleBackdropClick = e => {
+  const handleBackdropClick = e => {
     if (e.target === e.currentTarget) {
-      this.props.onClose();
+      onClose();
     }
   };
 
-  render() {
-    const { onClose, largeImage, alt } = this.props;
-    return createPortal(
-      <Backdroup onClick={this.handleBackdropClick}>
-        <Modals>
-          <LargeImage src={largeImage} alt={alt} />
-          <BtnClose type="button" aria-label="Close" onClick={onClose}>
-            <TfiClose />
-          </BtnClose>
-        </Modals>
-      </Backdroup>,
+  return createPortal(
+    <Backdroup onClick={handleBackdropClick}>
+      <Modals>
+        <LargeImage src={largeImage} alt={alt} />
+        <BtnClose type="button" aria-label="Close" onClick={onClose}>
+          <TfiClose />
+        </BtnClose>
+      </Modals>
+    </Backdroup>,
 
-      modalRoot
-    );
-  }
+    modalRoot
+  );
 }
