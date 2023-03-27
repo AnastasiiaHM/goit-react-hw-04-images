@@ -18,8 +18,6 @@ export class ImageGallery extends Component {
   async componentDidUpdate(prevProps, prevState) {
     const prevValue = prevProps.inputValue;
     const nextValue = this.props.inputValue;
-    console.log(prevValue);
-    console.log(nextValue);
 
     if (prevValue !== nextValue) {
       try {
