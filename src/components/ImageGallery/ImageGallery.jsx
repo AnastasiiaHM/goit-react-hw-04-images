@@ -1,44 +1,9 @@
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
-import { useState, useEffect } from 'react';
 import { Gallery, Sorry } from './ImageGallery.styled';
-import { BtnLoadMore } from '../BtnLoadMore/BtnLoadMore';
 import { Audio } from 'react-loader-spinner';
-import { getImages } from 'Services/imageSevice';
+// import PropTypes from 'prop-types';
 
-export function ImageGallery({ inputValue }) {
-  const [hits, setHits] = useState([]);
-  const [page, setPage] = useState(1);
-  const [pagesQuantity, setPageQuantity] = useState(1);
-  const [status, setStatus] = useState('idle');
-
-  useEffect(() => {
-    if (!inputValue) return;
-
-    async function fetchImages() {
-      try {
-        setStatus('pending');
-        const response = await getImages(inputValue, page);
-        const data = response.data.hits;
-
-        if (page > 1) {
-          setHits(prev => [...prev, ...data]);
-        } else {
-          setHits(data);
-        }
-        setPageQuantity(() => response.data.total / 12);
-        setStatus('response');
-      } catch {
-        setStatus('rejected');
-      }
-    }
-
-    fetchImages();
-  }, [inputValue, page]);
-
-  const handleClickLoadMore = () => {
-    setPage(prev => prev + 1);
-  };
-
+export function ImageGallery({ hits, status }) {
   if (status === 'idle') {
     return <Sorry>Hi! Please enter your request!</Sorry>;
   }
@@ -69,7 +34,17 @@ export function ImageGallery({ inputValue }) {
           ariaLabel="loading"
         />
       )}
-      {pagesQuantity > 1 && <BtnLoadMore onClick={handleClickLoadMore} />}
     </>
   );
 }
+
+// ImageGallery.PropTypes = {
+//   hits: PropTypes.arrayOf(
+//     PropTypes.shape({
+//       id: PropTypes.number.isRequired,
+//       webformatURL: PropTypes.string.isRequired,
+//       largeImageURL: PropTypes.string.isRequired,
+//     })
+//   ),
+//   status: PropTypes.string.isRequired,
+// };
